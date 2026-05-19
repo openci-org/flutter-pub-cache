@@ -341,7 +341,6 @@ host_cache_key_component() {
 
 cache_object_name() {
   local repo
-  local namespace
   local host_component
   local flutter_component
   local deps_component
@@ -349,17 +348,15 @@ cache_object_name() {
   local key_prefix
 
   repo="${INPUT_REPOSITORY:-${GITHUB_REPOSITORY:-unknown-repository}}"
-  namespace="$(sanitize_component "${INPUT_NAMESPACE:-default}")"
   host_component="$(host_cache_key_component)"
   flutter_component="$(flutter_cache_key_component)"
   deps_component="$(dependency_hash)"
   archive_extension="$(compression_extension)"
   key_prefix="${INPUT_KEY_PREFIX:-caches/flutter-pub}"
 
-  printf '%s/%s/%s/%s/%s/deps-%s.%s' \
+  printf '%s/%s/%s/%s/deps-%s.%s' \
     "${key_prefix%/}" \
     "$repo" \
-    "${namespace:-default}" \
     "$host_component" \
     "$flutter_component" \
     "$deps_component" \

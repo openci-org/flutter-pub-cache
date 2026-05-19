@@ -28,7 +28,6 @@ jobs:
         env:
           GITHUB_REPOSITORY: openci-org/example
           INPUT_WORKING_DIRECTORY: .
-          INPUT_NAMESPACE: apps-dashboard
           INPUT_REPOSITORY: openci-org/example
           INPUT_KEY_PREFIX: caches/flutter-pub
           INPUT_CACHE_PATH: ~/.pub-cache

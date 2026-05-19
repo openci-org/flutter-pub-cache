@@ -26,10 +26,6 @@ inputs:
     description: Storage object prefix for cache archives.
     required: false
     default: "caches/flutter-pub"
-  namespace:
-    description: Additional cache namespace for monorepos or multiple Flutter apps.
-    required: false
-    default: "default"
   dependency-paths:
     description: Optional newline-delimited file or glob patterns used to compute the dependency hash. Defaults to auto-detecting pubspec.yaml and pubspec.lock files.
     required: false
@@ -70,7 +66,6 @@ runs:
         INPUT_FIREBASE_OPTIONS_PATH: ${{ inputs.firebase-options-path }}
         INPUT_CACHE_PATH: ${{ inputs.cache-path }}
         INPUT_KEY_PREFIX: ${{ inputs.key-prefix }}
-        INPUT_NAMESPACE: ${{ inputs.namespace }}
         INPUT_DEPENDENCY_PATHS: ${{ inputs.dependency-paths }}
         INPUT_WORKING_DIRECTORY: ${{ inputs.working-directory }}
         INPUT_REPOSITORY: ${{ inputs.repository }}

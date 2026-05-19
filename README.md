@@ -8,24 +8,22 @@ This action is useful when GitHub Actions cache storage is not a good fit, for e
 
 ```yaml
 - name: Restore Flutter pub cache
-  uses: openci-org/flutter-pub-cache@a2e0a4ed12108fc4e4dbcd3ae01538e5102f9cbb
+  uses: openci-org/flutter-pub-cache@<commit-sha>
   with:
     action: restore
     service-account: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
     storage-bucket: my-project.appspot.com
-    namespace: apps-dashboard
 
 - run: flutter pub get
   working-directory: apps/dashboard
 
 - name: Save Flutter pub cache
   if: always()
-  uses: openci-org/flutter-pub-cache@a2e0a4ed12108fc4e4dbcd3ae01538e5102f9cbb
+  uses: openci-org/flutter-pub-cache@<commit-sha>
   with:
     action: save
     service-account: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
     storage-bucket: my-project.appspot.com
-    namespace: apps-dashboard
 ```
 
 Use a pinned commit SHA instead of a tag or branch.
@@ -49,7 +47,6 @@ with:
 | `firebase-options-path` | `lib/firebase_options.dart` | Firebase options file containing `storageBucket`. |
 | `cache-path` | `~/.pub-cache` | Pub cache directory to archive. |
 | `key-prefix` | `caches/flutter-pub` | Storage object prefix. |
-| `namespace` | `default` | Extra cache namespace for monorepos or multiple apps. |
 | `dependency-paths` | auto-detect | Optional newline-delimited file or glob patterns used to compute the dependency hash. When omitted, the action scans for `pubspec.yaml` and `pubspec.lock`. |
 | `working-directory` | `.` | Base directory for dependency paths and `firebase-options-path`. |
 | `repository` | current repository | Repository component used in the storage object name. |
@@ -69,7 +66,6 @@ The object name is built from:
 
 - `key-prefix`
 - repository
-- `namespace`
 - host OS and architecture
 - Flutter and Dart SDK versions
 - a dependency hash from auto-detected `pubspec.yaml` and `pubspec.lock` files, or from `dependency-paths` when provided
