@@ -13,13 +13,22 @@ jobs:
       - name: Validate action metadata
         run: ruby -e 'require "yaml"; YAML.load_file("action.yml")'
 
-      - name: Check shell syntax
-        run: bash -n src/flutter-pub-cache.sh
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check TypeScript
+        run: npm run check
+
+      - name: Build action
+        run: npm run build
+
+      - name: Check generated dist
+        run: git diff --exit-code -- dist/index.js
 
       - name: Usage errors fail
         run: |
           set +e
-          ./src/flutter-pub-cache.sh restroe
+          INPUT_ACTION=restroe node dist/index.js
           code="$?"
           set -e
           test "$code" -eq 2
@@ -36,5 +45,5 @@ jobs:
           touch pubspec.yaml pubspec.lock
           mkdir -p packages/example
           touch packages/example/pubspec.yaml packages/example/pubspec.lock
-          GITHUB_OUTPUT="${RUNNER_TEMP}/outputs.txt" ./src/flutter-pub-cache.sh restore
+          GITHUB_OUTPUT="${RUNNER_TEMP}/outputs.txt" INPUT_ACTION=restore node dist/index.js
           grep -q '^object-name=' "${RUNNER_TEMP}/outputs.txt"

@@ -46,48 +46,11 @@ inputs:
 outputs:
   cache-hit:
     description: true when restore downloaded an archive, false on miss or save.
-    value: ${{ steps.cache.outputs.cache-hit }}
   cache-saved:
     description: true when save uploaded a new archive, false otherwise.
-    value: ${{ steps.cache.outputs.cache-saved }}
   object-name:
     description: Google Cloud Storage object name used for the cache archive.
-    value: ${{ steps.cache.outputs.object-name }}
 
 runs:
-  using: composite
-  steps:
-    - id: cache
-      shell: bash
-      env:
-        INPUT_ACTION: ${{ inputs.action }}
-        INPUT_SERVICE_ACCOUNT: ${{ inputs.service-account }}
-        INPUT_STORAGE_BUCKET: ${{ inputs.storage-bucket }}
-        INPUT_FIREBASE_OPTIONS_PATH: ${{ inputs.firebase-options-path }}
-        INPUT_CACHE_PATH: ${{ inputs.cache-path }}
-        INPUT_KEY_PREFIX: ${{ inputs.key-prefix }}
-        INPUT_DEPENDENCY_PATHS: ${{ inputs.dependency-paths }}
-        INPUT_WORKING_DIRECTORY: ${{ inputs.working-directory }}
-        INPUT_REPOSITORY: ${{ inputs.repository }}
-        INPUT_FAIL_ON_ERROR: ${{ inputs.fail-on-error }}
-      run: |
-        set +e
-        "${GITHUB_ACTION_PATH}/src/flutter-pub-cache.sh" "${INPUT_ACTION}"
-        code="$?"
-        set -e
-
-        if [ "$code" -eq 0 ]; then
-          exit 0
-        fi
-
-        case "${INPUT_FAIL_ON_ERROR}" in
-          true|TRUE|True|1|yes|YES|Yes)
-            exit "$code"
-            ;;
-        esac
-
-        if [ "$code" -eq 2 ]; then
-          exit "$code"
-        fi
-
-        echo "::warning title=Flutter pub cache ${INPUT_ACTION} failed::Continuing because fail-on-error is false. Exit code: ${code}"
+  using: node24
+  main: dist/index.js
