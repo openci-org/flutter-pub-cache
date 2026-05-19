@@ -17,7 +17,7 @@ inputs:
   firebase-options-path:
     description: Path to a Firebase options file containing storageBucket.
     required: false
-    default: "apps/dashboard/lib/firebase_options.dart"
+    default: "lib/firebase_options.dart"
   cache-path:
     description: Pub cache directory to archive.
     required: false

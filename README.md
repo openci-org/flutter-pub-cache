@@ -46,7 +46,7 @@ with:
 | `action` | required | `restore` or `save`. |
 | `service-account` | empty | Google service account JSON. Falls back to `FIREBASE_SERVICE_ACCOUNT`. |
 | `storage-bucket` | empty | Bucket name. If omitted, `storageBucket` is read from `firebase-options-path`. |
-| `firebase-options-path` | `apps/dashboard/lib/firebase_options.dart` | Firebase options file containing `storageBucket`. |
+| `firebase-options-path` | `lib/firebase_options.dart` | Firebase options file containing `storageBucket`. |
 | `cache-path` | `~/.pub-cache` | Pub cache directory to archive. |
 | `key-prefix` | `caches/flutter-pub` | Storage object prefix. |
 | `namespace` | `default` | Extra cache namespace for monorepos or multiple apps. |

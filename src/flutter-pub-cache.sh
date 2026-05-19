@@ -72,7 +72,7 @@ storage_bucket() {
     return 0
   fi
 
-  firebase_options_path="$(absolute_path "${INPUT_FIREBASE_OPTIONS_PATH:-apps/dashboard/lib/firebase_options.dart}" "$work_dir")"
+  firebase_options_path="$(absolute_path "${INPUT_FIREBASE_OPTIONS_PATH:-lib/firebase_options.dart}" "$work_dir")"
   if [ ! -f "$firebase_options_path" ]; then
     return 0
   fi
@@ -511,7 +511,7 @@ fi
 
 bucket="$(storage_bucket)"
 if [ -z "$bucket" ]; then
-  echo "storage-bucket is not set and storageBucket could not be read from ${INPUT_FIREBASE_OPTIONS_PATH:-apps/dashboard/lib/firebase_options.dart}" >&2
+  echo "storage-bucket is not set and storageBucket could not be read from ${INPUT_FIREBASE_OPTIONS_PATH:-lib/firebase_options.dart}" >&2
   exit 1
 fi
 
