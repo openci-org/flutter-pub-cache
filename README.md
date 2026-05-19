@@ -13,7 +13,7 @@ This action is useful when GitHub Actions cache storage is not a good fit, for e
   with:
     action: restore
     service-account: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-    firebase-options-path: apps/dashboard/lib/firebase_options.dart
+    storage-bucket: my-project.appspot.com
     namespace: apps-dashboard
 
 - run: flutter pub get
@@ -26,17 +26,17 @@ This action is useful when GitHub Actions cache storage is not a good fit, for e
   with:
     action: save
     service-account: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-    firebase-options-path: apps/dashboard/lib/firebase_options.dart
+    storage-bucket: my-project.appspot.com
     namespace: apps-dashboard
 ```
 
-You can pass `storage-bucket` directly instead of reading it from a Firebase options file.
+You can also read the bucket from a Firebase options file instead of passing `storage-bucket` directly.
 
 ```yaml
 with:
   action: restore
   service-account: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-  storage-bucket: my-project.appspot.com
+  firebase-options-path: apps/dashboard/lib/firebase_options.dart
 ```
 
 ## Inputs
