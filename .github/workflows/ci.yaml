@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate action metadata
+        run: ruby -e 'require "yaml"; YAML.load_file("action.yml")'
+
+      - name: Check shell syntax
+        run: bash -n src/flutter-pub-cache.sh
+
+      - name: Dry run without service account
+        env:
+          GITHUB_REPOSITORY: openci-org/example
+          INPUT_WORKING_DIRECTORY: .
+          INPUT_NAMESPACE: apps-dashboard
+          INPUT_REPOSITORY: openci-org/example
+          INPUT_KEY_PREFIX: caches/flutter-pub
+          INPUT_CACHE_PATH: ~/.pub-cache
+          INPUT_FIREBASE_OPTIONS_PATH: apps/dashboard/lib/firebase_options.dart
+          INPUT_DEPENDENCY_PATHS: |
+            pubspec.yaml
+            pubspec.lock
+            **/pubspec.yaml
+            **/pubspec.lock
+        run: |
+          GITHUB_OUTPUT="${RUNNER_TEMP}/outputs.txt" ./src/flutter-pub-cache.sh restore
+          grep -q '^object-name=' "${RUNNER_TEMP}/outputs.txt"
