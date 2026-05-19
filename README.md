@@ -8,7 +8,7 @@ This action is useful when GitHub Actions cache storage is not a good fit, for e
 
 ```yaml
 - name: Restore Flutter pub cache
-  uses: openci-org/flutter-pub-cache@v1
+  uses: openci-org/flutter-pub-cache@a2e0a4ed12108fc4e4dbcd3ae01538e5102f9cbb
   with:
     action: restore
     service-account: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
@@ -20,13 +20,15 @@ This action is useful when GitHub Actions cache storage is not a good fit, for e
 
 - name: Save Flutter pub cache
   if: always()
-  uses: openci-org/flutter-pub-cache@v1
+  uses: openci-org/flutter-pub-cache@a2e0a4ed12108fc4e4dbcd3ae01538e5102f9cbb
   with:
     action: save
     service-account: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
     storage-bucket: my-project.appspot.com
     namespace: apps-dashboard
 ```
+
+Use a pinned commit SHA instead of a tag or branch.
 
 You can also read the bucket from a Firebase options file instead of passing `storage-bucket` directly.
 
