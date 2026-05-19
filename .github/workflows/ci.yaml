@@ -16,6 +16,14 @@ jobs:
       - name: Check shell syntax
         run: bash -n src/flutter-pub-cache.sh
 
+      - name: Usage errors fail
+        run: |
+          set +e
+          ./src/flutter-pub-cache.sh restroe
+          code="$?"
+          set -e
+          test "$code" -eq 2
+
       - name: Dry run without service account
         env:
           GITHUB_REPOSITORY: openci-org/example

@@ -9,7 +9,6 @@ This action is useful when GitHub Actions cache storage is not a good fit, for e
 ```yaml
 - name: Restore Flutter pub cache
   uses: openci-org/flutter-pub-cache@v1
-  continue-on-error: true
   with:
     action: restore
     service-account: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
@@ -22,7 +21,6 @@ This action is useful when GitHub Actions cache storage is not a good fit, for e
 - name: Save Flutter pub cache
   if: always()
   uses: openci-org/flutter-pub-cache@v1
-  continue-on-error: true
   with:
     action: save
     service-account: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
@@ -53,6 +51,7 @@ with:
 | `dependency-paths` | auto-detect | Optional newline-delimited file or glob patterns used to compute the dependency hash. When omitted, the action scans for `pubspec.yaml` and `pubspec.lock`. |
 | `working-directory` | `.` | Base directory for dependency paths and `firebase-options-path`. |
 | `repository` | current repository | Repository component used in the storage object name. |
+| `fail-on-error` | `false` | Fail the workflow when restore or save fails. Usage errors still fail regardless of this setting. |
 
 ## Outputs
 

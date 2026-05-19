@@ -533,7 +533,7 @@ fi
 bucket="$(storage_bucket)"
 if [ -z "$bucket" ]; then
   echo "storage-bucket is not set and storageBucket could not be read from ${INPUT_FIREBASE_OPTIONS_PATH:-lib/firebase_options.dart}" >&2
-  exit 1
+  exit 2
 fi
 
 token="$(access_token)"

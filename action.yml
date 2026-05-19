@@ -42,6 +42,10 @@ inputs:
     description: Repository component for the cache object name.
     required: false
     default: ""
+  fail-on-error:
+    description: Fail the workflow when restore or save fails. Usage errors still fail regardless of this setting.
+    required: false
+    default: "false"
 
 outputs:
   cache-hit:
@@ -70,4 +74,25 @@ runs:
         INPUT_DEPENDENCY_PATHS: ${{ inputs.dependency-paths }}
         INPUT_WORKING_DIRECTORY: ${{ inputs.working-directory }}
         INPUT_REPOSITORY: ${{ inputs.repository }}
-      run: '"${GITHUB_ACTION_PATH}/src/flutter-pub-cache.sh" "${INPUT_ACTION}"'
+        INPUT_FAIL_ON_ERROR: ${{ inputs.fail-on-error }}
+      run: |
+        set +e
+        "${GITHUB_ACTION_PATH}/src/flutter-pub-cache.sh" "${INPUT_ACTION}"
+        code="$?"
+        set -e
+
+        if [ "$code" -eq 0 ]; then
+          exit 0
+        fi
+
+        case "${INPUT_FAIL_ON_ERROR}" in
+          true|TRUE|True|1|yes|YES|Yes)
+            exit "$code"
+            ;;
+        esac
+
+        if [ "$code" -eq 2 ]; then
+          exit "$code"
+        fi
+
+        echo "::warning title=Flutter pub cache ${INPUT_ACTION} failed::Continuing because fail-on-error is false. Exit code: ${code}"
