@@ -50,7 +50,7 @@ with:
 | `cache-path` | `~/.pub-cache` | Pub cache directory to archive. |
 | `key-prefix` | `caches/flutter-pub` | Storage object prefix. |
 | `namespace` | `default` | Extra cache namespace for monorepos or multiple apps. |
-| `dependency-paths` | pubspec files | Newline-delimited file or glob patterns used to compute the dependency hash. |
+| `dependency-paths` | auto-detect | Optional newline-delimited file or glob patterns used to compute the dependency hash. When omitted, the action scans for `pubspec.yaml` and `pubspec.lock`. |
 | `working-directory` | `.` | Base directory for dependency paths and `firebase-options-path`. |
 | `repository` | current repository | Repository component used in the storage object name. |
 
@@ -71,7 +71,7 @@ The object name is built from:
 - `namespace`
 - host OS and architecture
 - Flutter and Dart SDK versions
-- a dependency hash from `dependency-paths`
+- a dependency hash from auto-detected `pubspec.yaml` and `pubspec.lock` files, or from `dependency-paths` when provided
 - archive extension, preferring zstd when available
 
 Existing cache objects are immutable. `save` skips upload when the object already exists.

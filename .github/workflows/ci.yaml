@@ -25,11 +25,9 @@ jobs:
           INPUT_KEY_PREFIX: caches/flutter-pub
           INPUT_CACHE_PATH: ~/.pub-cache
           INPUT_FIREBASE_OPTIONS_PATH: apps/dashboard/lib/firebase_options.dart
-          INPUT_DEPENDENCY_PATHS: |
-            pubspec.yaml
-            pubspec.lock
-            **/pubspec.yaml
-            **/pubspec.lock
         run: |
+          touch pubspec.yaml pubspec.lock
+          mkdir -p packages/example
+          touch packages/example/pubspec.yaml packages/example/pubspec.lock
           GITHUB_OUTPUT="${RUNNER_TEMP}/outputs.txt" ./src/flutter-pub-cache.sh restore
           grep -q '^object-name=' "${RUNNER_TEMP}/outputs.txt"

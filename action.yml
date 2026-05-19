@@ -31,13 +31,9 @@ inputs:
     required: false
     default: "default"
   dependency-paths:
-    description: Newline-delimited file or glob patterns used to compute the dependency hash.
+    description: Optional newline-delimited file or glob patterns used to compute the dependency hash. Defaults to auto-detecting pubspec.yaml and pubspec.lock files.
     required: false
-    default: |
-      pubspec.yaml
-      pubspec.lock
-      **/pubspec.yaml
-      **/pubspec.lock
+    default: ""
   working-directory:
     description: Directory where dependency paths and firebase-options-path are resolved.
     required: false

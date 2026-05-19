@@ -235,10 +235,6 @@ dependency_hash() {
   local patterns_file="$tmp_dir/dependency-paths.txt"
   local dependency_paths="${INPUT_DEPENDENCY_PATHS:-}"
 
-  if [ -z "$dependency_paths" ]; then
-    dependency_paths="$(printf '%s\n' "pubspec.yaml" "pubspec.lock" "**/pubspec.yaml" "**/pubspec.lock")"
-  fi
-
   printf '%s\n' "$dependency_paths" > "$patterns_file"
 
   python3 - "$work_dir" "$patterns_file" <<'PY'
@@ -253,22 +249,47 @@ patterns_file = sys.argv[2]
 with open(patterns_file, encoding="utf-8") as f:
     patterns = [line.strip() for line in f if line.strip() and not line.lstrip().startswith("#")]
 
+ignored_dirs = {
+    ".dart_tool",
+    ".firebase",
+    ".fvm",
+    ".git",
+    ".pub-cache",
+    ".swiftpm",
+    "build",
+    "node_modules",
+}
+
 files = []
 seen = set()
-for pattern in patterns:
-    path_pattern = pattern if os.path.isabs(pattern) else os.path.join(work_dir, pattern)
-    if any(ch in pattern for ch in "*?["):
-        matches = sorted(glob.glob(path_pattern, recursive=True))
-        for match in matches:
-            path = os.path.abspath(match)
-            if os.path.isfile(path) and path not in seen:
-                seen.add(path)
-                files.append(path)
-    elif os.path.isfile(path_pattern):
-        path = os.path.abspath(path_pattern)
-        if path not in seen:
-            seen.add(path)
-            files.append(path)
+
+def is_ignored(path):
+    rel = os.path.relpath(path, work_dir)
+    if rel == ".":
+        return False
+    return any(part in ignored_dirs for part in rel.split(os.sep))
+
+def add_file(path):
+    path = os.path.abspath(path)
+    if os.path.isfile(path) and not is_ignored(path) and path not in seen:
+        seen.add(path)
+        files.append(path)
+
+if patterns:
+    for pattern in patterns:
+        path_pattern = pattern if os.path.isabs(pattern) else os.path.join(work_dir, pattern)
+        if any(ch in pattern for ch in "*?["):
+            matches = sorted(glob.glob(path_pattern, recursive=True))
+            for match in matches:
+                add_file(match)
+        else:
+            add_file(path_pattern)
+else:
+    for root, dirs, names in os.walk(work_dir):
+        dirs[:] = sorted(d for d in dirs if d not in ignored_dirs)
+        for name in ("pubspec.yaml", "pubspec.lock"):
+            if name in names:
+                add_file(os.path.join(root, name))
 
 digest = hashlib.sha256()
 for path in files:
